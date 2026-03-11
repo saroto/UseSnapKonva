@@ -1,8 +1,12 @@
 {
   "name": "use-snapping-konva",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Konva snapping object hook using typescript",
-  "keywords": ["konva", "snapping", "typescript"],
+  "keywords": [
+    "konva",
+    "snapping",
+    "typescript"
+  ],
   "author": "Kimsinh Seang",
   "license": "MIT",
   "main": "./dist/index.js",
@@ -15,7 +19,9 @@
       "require": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch"
