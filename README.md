@@ -1,5 +1,8 @@
 # use-snapping-konva
 
+![npm version](https://img.shields.io/npm/v/use-snapping-konva)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+<!-- > **Note:** Replace this block quote with an image or GIF of your UI elements snapping to alignment guides! -->
 A lightweight TypeScript utility for [Konva.js](https://konvajs.org/) that adds smart snapping and visual guidelines when dragging or resizing shapes on a canvas.
 
 ## Features
@@ -75,4 +78,10 @@ All settings are optional. Defaults are shown below.
 
 ## License
 
-ISC © Kimsinh Seang
+MIT © Kimsinh Seang
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### Acknowledgments
+
+This project was inspired by and adapted from the excellent [use-konva-snapping](https://github.com/faridmth/use-konva-snapping) by Farid.
