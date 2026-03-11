@@ -19,6 +19,14 @@
       "require": "./dist/index.js"
     }
   },
+   "repository": {
+    "type": "git",
+    "url": "https://github.com/saroto/UseSnapKonva.git"
+  },
+  "homepage": "https://github.com/saroto/UseSnapKonva",
+  "bugs": {
+    "url": "https://github.com/saroto/UseSnapKonva/issues"
+  },
   "files": [
     "dist"
   ],
