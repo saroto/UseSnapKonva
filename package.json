@@ -1,6 +1,6 @@
 {
   "name": "use-snapping-konva",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Konva snapping object hook using typescript",
   "keywords": [
     "konva",
