@@ -1,8 +1,11 @@
 # use-snapping-konva
 
-![npm version](https://img.shields.io/npm/v/use-snapping-konva)
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
-<!-- > **Note:** Replace this block quote with an image or GIF of your UI elements snapping to alignment guides! -->
+[![npm version](https://img.shields.io/npm/v/use-snapping-konva)](https://www.npmjs.com/package/use-snapping-konva)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/saroto/UseSnapKonva/blob/main/LICENSE)
+[![GitHub](https://img.shields.io/badge/GitHub-saroto%2FUseSnapKonva-181717?logo=github)](https://github.com/saroto/UseSnapKonva)
+
+
+
 A lightweight TypeScript utility for [Konva.js](https://konvajs.org/) that adds smart snapping and visual guidelines when dragging or resizing shapes on a canvas.
 
 ## Features
@@ -75,6 +78,10 @@ All settings are optional. Defaults are shown below.
 | `snapToShapes` | `boolean` | `true` | Snap to edges and centers of other shapes |
 | `pageSize` | `{ width, height }` | `{ width: 800, height: 600 }` | The logical page dimensions |
 | `workspacePadding` | `number` | `1500` | Padding around the page within the stage |
+
+## Repository
+
+[https://github.com/saroto/UseSnapKonva](https://github.com/saroto/UseSnapKonva)
 
 ## License
 
