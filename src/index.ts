@@ -28,8 +28,7 @@ export function useSnapKonva(prop: Partial<UseSnapKonvaSettings> = {}) {
     pageSize: prop.pageSize ?? { width: 800, height: 600 },
     workspacePadding: prop.workspacePadding ?? 1500,
   };
-//   const { showTooltip } = useTooltip();
-//   const { findElement, pageSize, WORKSPACE_PADDING } = useEditor();
+
   const getSnappingPoints = (
     e: Konva.KonvaEventObject<DragEvent> | Konva.KonvaEventObject<Event>,
   ) => {
@@ -41,15 +40,12 @@ export function useSnapKonva(prop: Partial<UseSnapKonvaSettings> = {}) {
 
     const scaleX = stage.scaleX();
     const scaleY = stage.scaleY();
-    // const stagePos = stage.position();
 
     if (snapToStageCenter) {
         
     const stagePos = stage.position();
     vertical.push(stagePos.x + (settings.workspacePadding + settings.pageSize.width / 2) * scaleX);
     horizontal.push(stagePos.y + (settings.workspacePadding + settings.pageSize.height / 2) * scaleY);
-    //   vertical.push(stage.width() / 2);
-    //   horizontal.push(stage.height() / 2);
     }
     if (snapToStageBorders) {
     
@@ -63,12 +59,6 @@ export function useSnapKonva(prop: Partial<UseSnapKonvaSettings> = {}) {
       );
     }
     if (snapToShapes) {
-      // Iterate all shapes in the stage
-    //   stage.find(".element").forEach((obj) => {
-    //     // We assume elements we want to snap to have name 'element' or similar class
-    //     // If not, we can iterate recursively.
-    //     // For now let's try to match the robust way: look for shapes that are not the dragging one.
-    //   });
 
       // Using a recursive search for all shapes/groups usually works well if we filter out the current one
       // But let's stick to iterating layers as per original intent but safer.
@@ -149,12 +139,7 @@ export function useSnapKonva(prop: Partial<UseSnapKonvaSettings> = {}) {
     const layer = target.getLayer();
     const stage = target.getStage();
     if (!layer || !stage) return;
-    // const element = findElement(target.id());
-    // if (element) {
-    //   element.x = target.x();
-    //   element.y = target.y();
-    // }
-    // Clear previous lines
+
     layer.find(".guid-line").forEach((l) => l.destroy());
 
     const { vertical, horizontal } = getSnappingPoints(e);
@@ -243,18 +228,7 @@ export function useSnapKonva(prop: Partial<UseSnapKonvaSettings> = {}) {
   // We clean up lines at least.
   const handleResize = (e: Konva.KonvaEventObject<DragEvent>) => {
     const layer = e.target.getLayer();
-    // const layer = target.getLayer();
 
-    // const element = findElement(target.id());
-    // if (element) {
-    //   element.width = target.width();
-    //   element.height = target.height();
-    // }
-    // const width = target.width() * target.scaleX();
-    // const height = target.height() * target.scaleY();
-    // const absPos = target.absolutePosition();
-
-    // showTooltip(absPos.x + width / 2, absPos.y + height / 2, width, height);
     if (layer) layer.find(".guid-line").forEach((l) => l.destroy());
   };
 

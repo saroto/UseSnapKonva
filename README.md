@@ -22,6 +22,10 @@ A lightweight TypeScript utility for [Konva.js](https://konvajs.org/) that adds 
 npm install use-snapping-konva
 ```
 
+```bash
+yarn add use-snapping-konva
+```
+
 > **Peer dependency:** `konva >= 8.0.0` must be installed in your project.
 
 ## Usage
