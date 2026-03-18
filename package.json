@@ -1,11 +1,15 @@
 {
   "name": "use-snapping-konva",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Konva snapping object hook using typescript",
   "keywords": [
     "konva",
+    "canvas",
     "snapping",
-    "typescript"
+    "alignment-guidelines",
+    "typescript",
+    "react-konva",
+    "hook"
   ],
   "author": "Kimsinh Seang",
   "license": "MIT",
@@ -32,7 +36,10 @@
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch"
+    "dev": "tsup --watch",
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "peerDependencies": {
     "konva": ">=8.0.0"
@@ -41,6 +48,7 @@
     "@types/node": "^25.4.0",
     "konva": "^10.2.0",
     "tsup": "^8.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
   }
 }
