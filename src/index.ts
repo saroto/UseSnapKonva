@@ -1,18 +1,18 @@
 import Konva from "konva";
 
-interface UseSnapKonvaSettings {
-    snapRange: number;
-    guidelineColor: string;
-    guidelineDash: boolean;
-    showGuidelines: boolean;
-    guideThickness: number;
-    snapToStageCenter: boolean;
-    snapToStageBorders: boolean;
-    snapToShapes: boolean;
-    pageSize: { width: number; height: number };
-    workspacePadding: number;
-    onDragEnd?: (e: Konva.KonvaEventObject<DragEvent>) => void;
-    onResizeEnd?: (e: Konva.KonvaEventObject<Event>) => void;
+export interface UseSnapKonvaSettings {
+  snapRange: number;
+  guidelineColor: string;
+  guidelineDash: boolean;
+  showGuidelines: boolean;
+  guideThickness: number;
+  snapToStageCenter: boolean;
+  snapToStageBorders: boolean;
+  snapToShapes: boolean;
+  pageSize: { width: number; height: number };
+  workspacePadding: number;
+  onDragEnd?: (e: Konva.KonvaEventObject<DragEvent>) => void;
+  onResizeEnd?: (e: Konva.KonvaEventObject<Event>) => void;
 }
 
 export function useSnapKonva(prop: Partial<UseSnapKonvaSettings> = {}) {
@@ -41,31 +41,26 @@ export function useSnapKonva(prop: Partial<UseSnapKonvaSettings> = {}) {
     const scaleX = stage.scaleX();
     const scaleY = stage.scaleY();
 
-    if (snapToStageCenter) {
-        
     const stagePos = stage.position();
-    vertical.push(stagePos.x + (settings.workspacePadding + settings.pageSize.width / 2) * scaleX);
-    horizontal.push(stagePos.y + (settings.workspacePadding + settings.pageSize.height / 2) * scaleY);
+
+    if (snapToStageCenter) {
+      vertical.push(stagePos.x + (settings.workspacePadding + settings.pageSize.width / 2) * scaleX);
+      horizontal.push(stagePos.y + (settings.workspacePadding + settings.pageSize.height / 2) * scaleY);
     }
     if (snapToStageBorders) {
-    
-      horizontal.push(
-        settings.workspacePadding * scaleY,
-        (settings.workspacePadding + settings.pageSize.height) * scaleY,
-      );
       vertical.push(
-        settings.workspacePadding * scaleX,
-        (settings.workspacePadding + settings.pageSize.width) * scaleX,
+        stagePos.x + settings.workspacePadding * scaleX,
+        stagePos.x + (settings.workspacePadding + settings.pageSize.width) * scaleX,
+      );
+      horizontal.push(
+        stagePos.y + settings.workspacePadding * scaleY,
+        stagePos.y + (settings.workspacePadding + settings.pageSize.height) * scaleY,
       );
     }
     if (snapToShapes) {
-
-      // Using a recursive search for all shapes/groups usually works well if we filter out the current one
-      // But let's stick to iterating layers as per original intent but safer.
       const layers = stage.getChildren();
       layers.forEach((layer) => {
         layer.getChildren().forEach((groupOrShape) => {
-          // Don't snap to itself or the transformer
           if (
             groupOrShape === e.target ||
             groupOrShape instanceof Konva.Transformer ||
@@ -73,14 +68,7 @@ export function useSnapKonva(prop: Partial<UseSnapKonvaSettings> = {}) {
           )
             return;
 
-          // Also don't snap to the object being dragged if it's a parent of this shape?
-          // e.target IS the object being dragged.
-
           const box = groupOrShape.getClientRect({ skipTransform: false });
-          // Note: getClientRect is relative to stage if not specified,
-          // but we need them in absolute stage coordinates.
-          // vertical/horizontal arrays store absolute coordinates.
-
           vertical.push(box.x, box.x + box.width / 2, box.x + box.width);
           horizontal.push(box.y, box.y + box.height / 2, box.y + box.height);
         });
@@ -96,7 +84,7 @@ export function useSnapKonva(prop: Partial<UseSnapKonvaSettings> = {}) {
     layer: Konva.Layer,
     isHorizontal: boolean,
     lineX: number,
-    LineY: number,
+    lineY: number,
   ) => {
     const { guidelineColor, guidelineDash, guideThickness, showGuidelines } =
       settings;
@@ -104,30 +92,24 @@ export function useSnapKonva(prop: Partial<UseSnapKonvaSettings> = {}) {
 
     const transform = layer.getAbsoluteTransform().copy();
     const inverse = transform.invert();
+    const offset = inverse.point({ x: lineX, y: lineY });
 
-    // Transform the point using inverse transform to get local coordinates
-    const offset = inverse.point({ x: Number(lineX), y: Number(LineY) });
-
-    // Get scale to adjust thickness so it looks constant
     const stage = layer.getStage();
     const scaleX = stage ? stage.scaleX() : 1;
     const scaleY = stage ? stage.scaleY() : 1;
+    const scale = isHorizontal ? scaleY : scaleX;
 
-    // Use a large range (relative to scale) so it covers the viewport
-    // Increase range significantly because local coordinates can be very large if zoomed out
-    const range = 60000 / scaleX;
-
-    const x = offset.x;
-    const y = offset.y;
+    const range = 60000 / scale;
+    const { x, y } = offset;
 
     const points = isHorizontal ? [-range, y, range, y] : [x, -range, x, range];
 
     const line = new Konva.Line({
       points,
       stroke: guidelineColor,
-      strokeWidth: guideThickness / scaleX,
+      strokeWidth: guideThickness / scale,
       name: "guid-line",
-      dash: guidelineDash ? [4 / scaleX, 4 / scaleX] : undefined,
+      dash: guidelineDash ? [4 / scale, 4 / scale] : undefined,
       listening: false,
     });
     layer.add(line);
@@ -223,23 +205,23 @@ export function useSnapKonva(prop: Partial<UseSnapKonvaSettings> = {}) {
     target.absolutePosition(newPos);
   };
 
-  // Placeholder for resize if needed, but for now we focus on dragging as requested.
-  // The previous implementation was throwing errors and had complex logic for anchors.
-  // We clean up lines at least.
-  const handleResize = (e: Konva.KonvaEventObject<DragEvent>) => {
+  const clearGuidelines = (e: Konva.KonvaEventObject<DragEvent> | Konva.KonvaEventObject<Event>) => {
     const layer = e.target.getLayer();
-
     if (layer) layer.find(".guid-line").forEach((l) => l.destroy());
+  };
+
+  const handleResize = (e: Konva.KonvaEventObject<Event>) => {
+    clearGuidelines(e);
   };
 
   const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
-    const layer = e.target.getLayer();
-    if (layer) layer.find(".guid-line").forEach((l) => l.destroy());
+    clearGuidelines(e);
+    prop.onDragEnd?.(e);
   };
 
   const handleResizeEnd = (e: Konva.KonvaEventObject<Event>) => {
-    const layer = e.target.getLayer();
-    if (layer) layer.find(".guid-line").forEach((l) => l.destroy());
+    clearGuidelines(e);
+    prop.onResizeEnd?.(e);
   };
 
   return { handleDragging, handleDragEnd, handleResize, handleResizeEnd };
