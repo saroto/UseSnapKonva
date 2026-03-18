@@ -42,6 +42,12 @@ const { handleDragging, handleDragEnd, handleResize, handleResizeEnd } = useSnap
   snapToShapes: true,
   pageSize: { width: 1920, height: 1080 },
   workspacePadding: 1500,
+  onDragEnd: (e) => {
+    console.log("Drag ended", e.target.position());
+  },
+  onResizeEnd: (e) => {
+    console.log("Resize ended", e.target.position());
+  },
 });
 
 // Attach to a draggable shape
@@ -53,6 +59,21 @@ transformer.on("transform", handleResize);
 transformer.on("transformend", handleResizeEnd);
 ```
 
+### TypeScript
+
+The settings type is exported for use in your own code:
+
+```ts
+import { useSnapKonva, UseSnapKonvaSettings } from "use-snapping-konva";
+
+const mySettings: Partial<UseSnapKonvaSettings> = {
+  snapRange: 10,
+  guidelineColor: "red",
+};
+
+const handlers = useSnapKonva(mySettings);
+```
+
 ## API
 
 ### `useSnapKonva(settings?)`
@@ -62,9 +83,9 @@ Returns an object with four event handlers to attach to Konva nodes.
 | Handler | Konva event | Description |
 |---|---|---|
 | `handleDragging` | `dragmove` | Calculates snapping and draws guidelines while dragging |
-| `handleDragEnd` | `dragend` | Clears all guidelines after a drag ends |
+| `handleDragEnd` | `dragend` | Clears all guidelines and invokes `onDragEnd` callback |
 | `handleResize` | `transform` | Clears guidelines during a resize |
-| `handleResizeEnd` | `transformend` | Clears all guidelines after a resize ends |
+| `handleResizeEnd` | `transformend` | Clears all guidelines and invokes `onResizeEnd` callback |
 
 ### Settings
 
@@ -82,6 +103,8 @@ All settings are optional. Defaults are shown below.
 | `snapToShapes` | `boolean` | `true` | Snap to edges and centers of other shapes |
 | `pageSize` | `{ width, height }` | `{ width: 800, height: 600 }` | The logical page dimensions |
 | `workspacePadding` | `number` | `1500` | Padding around the page within the stage |
+| `onDragEnd` | `(e: KonvaEventObject<DragEvent>) => void` | `undefined` | Callback invoked after drag ends and guidelines are cleared |
+| `onResizeEnd` | `(e: KonvaEventObject<Event>) => void` | `undefined` | Callback invoked after resize ends and guidelines are cleared |
 
 ## Repository
 
